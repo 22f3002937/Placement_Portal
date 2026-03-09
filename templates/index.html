@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .home-container {
+        min-height: 70vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .home-card {
+        max-width: 600px;
+        padding: 50px 40px;
+        background-color: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .home-card h2 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+
+    .home-card p {
+        color: #555;
+        margin-bottom: 30px;
+        font-size: 15px;
+    }
+
+    .home-actions a {
+        display: inline-block;
+        margin: 8px;
+        padding: 10px 22px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="home-container">
+    <div class="home-card">
+        <h2>Welcome to Placement Portal</h2>
+        <p>Select your role to continue</p>
+
+        <div class="home-actions">
+            <a href="{{ url_for('login') }}" class="btn-secondary">Login</a>
+            <a href="{{ url_for('register_student') }}"
+                class="btn-primary">Student Register</a>
+            <a href="{{ url_for('register_company') }}"
+                class="btn-secondary">Company Register</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
