@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .profile-container {
+        max-width: 700px;
+        margin: 60px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-container h3 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .profile-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .profile-table th,
+    .profile-table td {
+        padding: 12px 10px;
+        border: 1px solid #e0e0e0;
+        text-align: left;
+    }
+
+    .profile-table th {
+        width: 40%;
+        background-color: #f4f6f9;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .profile-table tr:nth-child(even) td {
+        background-color: #fafafa;
+    }
+
+    .status-approved {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .status-rejected {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    .blacklisted-yes {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    .blacklisted-no {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        background-color: #6c757d;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="profile-container">
+
+    <h3>Company Profile</h3>
+
+    <table class="profile-table">
+        <tr>
+            <th>Company Name</th>
+            <td>{{ company.company_name }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ company.user.email }}</td>
+        </tr>
+        <tr>
+            <th>HR Contact</th>
+            <td>{{ company.hr_contact }}</td>
+        </tr>
+        <tr>
+            <th>Website</th>
+            <td>{{ company.website }}</td>
+        </tr>
+        <tr>
+            <th>Approval Status</th>
+            <td class="
+                {% if company.approval_status == 'approved' %}
+                    status-approved
+                {% elif company.approval_status == 'pending' %}
+                    status-pending
+                {% else %}
+                    status-rejected
+                {% endif %}
+            ">
+                {{ company.approval_status }}
+            </td>
+        </tr>
+        <tr>
+            <th>Blacklisted</th>
+            <td
+                class="{% if company.is_blacklisted %}blacklisted-yes{% else %}blacklisted-no{% endif %}">
+                {{ "Yes" if company.is_blacklisted else "No" }}
+            </td>
+        </tr>
+    </table>
+
+    <a href="{{ url_for('company_dashboard') }}" class="back-btn">Back</a>
+
+</div>
+
+{% endblock %}

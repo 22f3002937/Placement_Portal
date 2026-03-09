@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .applications-container {
+        max-width: 1150px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .applications-container h3 {
+        margin-bottom: 25px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 12px 10px;
+        border: 1px solid #e0e0e0;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .custom-table th {
+        background-color: #f4f6f9;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .custom-table tbody tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f1f5ff;
+    }
+
+    .status-approved {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .status-rejected {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    .action-buttons a {
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        background-color: #ffc107;
+        color: #000;
+        font-weight: 500;
+    }
+
+    .action-buttons a:hover {
+        background-color: #e0a800;
+    }
+
+    .no-result {
+        text-align: center;
+        color: #888;
+        font-style: italic;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="applications-container">
+
+    <h3>Applications for "{{ drive.job_title }}"</h3>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Branch</th>
+                <th>CGPA</th>
+
+                <th>Status</th>
+                <th>Resume</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>{{ application.student.user.name }}</td>
+                <td>{{ application.student.user.email }}</td>
+                <td>{{ application.student.branch }}</td>
+                <td>{{ application.student.cgpa }}</td>
+
+                <td class="
+                    {% if application.status == 'approved' %}
+                        status-approved
+                    {% elif application.status == 'pending' %}
+                        status-pending
+                    {% else %}
+                        status-rejected
+                    {% endif %}
+                ">
+                    {{ application.status }}
+                </td>
+
+                <td>
+                    {% if application.student.resume_filename %}
+                    <a
+                        href="{{ url_for('static', filename='resumes/' + application.student.resume) }}"
+                        target="_blank">
+                        View
+                    </a>
+                    {% else %}
+                    Not Uploaded
+                    {% endif %}
+                </td>
+
+                <td class="action-buttons">
+                    <a
+                        href="{{ url_for('update_application_status', application_id=application.id) }}">
+                        Update
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="no-result">
+                    No applications received yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('company_dashboard') }}" class="back-btn">Back</a>
+
+</div>
+
+{% endblock %}

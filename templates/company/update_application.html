@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .update-container {
+        max-width: 550px;
+        margin: 60px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .update-container h3 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .info-box {
+        background-color: #f8f9fb;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+
+    .info-box p {
+        margin: 6px 0;
+        color: #444;
+    }
+
+    .update-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #444;
+    }
+
+    .update-container select,
+    .update-container input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #dcdcdc;
+        border-radius: 6px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .update-container select:focus,
+    .update-container input:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 6px rgba(40, 167, 69, 0.25);
+        outline: none;
+    }
+
+    .update-container .btn-success {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: background 0.3s ease;
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .update-container .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .cancel-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 8px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        background-color: #6c757d;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .cancel-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="update-container">
+
+    <h3>Update Application Status</h3>
+
+    <div class="info-box">
+        <p><strong>Student:</strong> {{ application.student.user.name }}</p>
+        <p><strong>Drive:</strong> {{ application.drive.job_title }}</p>
+        <p><strong>Current Status:</strong> {{ application.status }}</p>
+    </div>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.status.label }}
+            {{ form.status(class="form-select") }}
+        </div>
+
+        {{ form.submit(class="btn btn-success") }}
+    </form>
+
+    <a href="{{ url_for('view_applications', drive_id=application.drive_id) }}"
+        class="cancel-btn">
+        Cancel
+    </a>
+
+</div>
+
+{% endblock %}
