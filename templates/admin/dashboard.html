@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 30px;
+    }
+
+    .dashboard-title {
+        font-weight: 600;
+        margin-bottom: 25px;
+        color: #2c3e50;
+    }
+
+    /* Search Bar */
+    .search-bar {
+        display: flex;
+        max-width: 500px;
+        margin-bottom: 25px;
+    }
+
+    .search-bar input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px 0 0 6px;
+        outline: none;
+    }
+
+    .search-bar button {
+        padding: 10px 18px;
+        border: none;
+        background-color: #343a40;
+        color: #fff;
+        border-radius: 0 6px 6px 0;
+        cursor: pointer;
+    }
+
+    .search-bar button:hover {
+        background-color: #23272b;
+    }
+
+    /* Navigation Buttons */
+    .dashboard-actions {
+        margin-bottom: 30px;
+    }
+
+    .dashboard-actions a {
+        display: inline-block;
+        margin: 5px 10px 5px 0;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        border: 1px solid transparent;
+    }
+
+    .btn-primary-outline {
+        border-color: #007bff;
+        color: #007bff;
+    }
+
+    .btn-primary-outline:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-success-outline {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+    .btn-success-outline:hover {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-warning-outline {
+        border-color: #ffc107;
+        color: #856404;
+    }
+
+    .btn-warning-outline:hover {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    /* Stats Section */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 35px;
+    }
+
+    .stat-card {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+    .stat-card h4 {
+        margin: 0;
+        font-size: 16px;
+        color: #555;
+    }
+
+    .stat-number {
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 8px;
+        color: #2c3e50;
+    }
+
+    /* Tables */
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        border: 1px solid #e0e0e0;
+        padding: 8px 10px;
+        text-align: left;
+    }
+
+    .custom-table th {
+        background-color: #f4f6f9;
+        font-weight: 600;
+    }
+
+    .custom-table tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .custom-table tr:hover {
+        background-color: #f1f5ff;
+    }
+
+    .section-divider {
+        margin: 30px 0 15px 0;
+        border-top: 1px solid #ddd;
+    }
+
+    .logout-link {
+        display: inline-block;
+        margin-top: 25px;
+        color: #dc3545;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .logout-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="dashboard-container">
+
+    <h3 class="dashboard-title">Admin Dashboard</h3>
+
+    <form method="GET" action="{{ url_for('admin_dashboard') }}">
+        <div class="search-bar">
+            <input type="text" name="q"
+                placeholder="Search students or companies by Name or ID"
+                value="{{ query }}">
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="dashboard-actions">
+        <a href="{{ url_for('admin_companies') }}"
+            class="btn-primary-outline">Manage Companies</a>
+        <a href="{{ url_for('admin_students') }}"
+            class="btn-success-outline">Manage Students</a>
+        <a href="{{ url_for('admin_drives') }}"
+            class="btn-warning-outline">Manage Drives</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Total Students</h4>
+            <div class="stat-number">{{ total_students }}</div>
+        </div>
+        <div class="stat-card">
+            <h4>Total Companies</h4>
+            <div class="stat-number">{{ total_companies }}</div>
+        </div>
+        <div class="stat-card">
+            <h4>Total Applications</h4>
+            <div class="stat-number">{{ total_applications }}</div>
+        </div>
+        <div class="stat-card">
+            <h4>Total Drives</h4>
+            <div class="stat-number">{{ total_drives }}</div>
+        </div>
+    </div>
+
+    {% if query %}
+
+    <div class="section-divider"></div>
+    <h5>Search Results for "{{ query }}"</h5>
+
+    <h6>Students</h6>
+    <table class="custom-table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Branch</th>
+        </tr>
+        {% for student in student_results %}
+        <tr>
+            <td>{{ student.id }}</td>
+            <td>{{ student.user.name }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>{{ student.branch }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No students found</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h6 style="margin-top:20px;">Companies</h6>
+    <table class="custom-table">
+        <tr>
+            <th>ID</th>
+            <th>Company Name</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+        {% for company in company_results %}
+        <tr>
+            <td>{{ company.id }}</td>
+            <td>{{ company.company_name }}</td>
+            <td>{{ company.user.email }}</td>
+            <td>{{ company.approval_status }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No companies found</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endif %}
+
+    <div>
+        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+    </div>
+
+</div>
+
+{% endblock %}

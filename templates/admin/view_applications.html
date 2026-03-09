@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .applications-container {
+        max-width: 1150px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .applications-container h3 {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .drive-details {
+        margin-bottom: 25px;
+        padding: 15px 20px;
+        background-color: #f8f9fb;
+        border-radius: 8px;
+    }
+
+    .drive-details h4 {
+        margin: 5px 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: #444;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 12px 10px;
+        border: 1px solid #e0e0e0;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .custom-table th {
+        background-color: #f4f6f9;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .custom-table tbody tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f1f5ff;
+    }
+
+    .status-approved {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .status-rejected {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    .no-result {
+        text-align: center;
+        color: #888;
+        font-style: italic;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="applications-container">
+
+    <h3>Applications for "{{ drive.job_title }}"</h3>
+
+    <div class="drive-details">
+        <h4><strong>Job Title:</strong> {{ drive.job_title }}</h4>
+        <h4><strong>Company:</strong> {{ drive.company.company_name }}</h4>
+        <h4><strong>Application Deadline:</strong> {{ drive.application_deadline
+            }}</h4>
+    </div>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Branch</th>
+                <th>CGPA</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>{{ application.student.user.name }}</td>
+                <td>{{ application.student.user.email }}</td>
+                <td>{{ application.student.branch }}</td>
+                <td>{{ application.student.cgpa }}</td>
+
+                <td class="
+                    {% if application.status == 'approved' %}
+                        status-approved
+                    {% elif application.status == 'pending' %}
+                        status-pending
+                    {% else %}
+                        status-rejected
+                    {% endif %}
+                ">
+                    {{ application.status }}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="no-result">
+                    No applications received yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('admin_drives') }}" class="back-btn">Back</a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .admin-container {
+        max-width: 1150px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .admin-container h3 {
+        margin-bottom: 25px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 12px 10px;
+        border: 1px solid #e0e0e0;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .custom-table th {
+        background-color: #f4f6f9;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .custom-table tbody tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f1f5ff;
+    }
+
+    .action-buttons a {
+        margin: 2px 3px;
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 500;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .status-approved {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .status-rejected {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    .dashboard-link {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        color: #007bff;
+    }
+
+    .dashboard-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="admin-container">
+    <h3>Manage Placement Drives</h3>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Job Title</th>
+                <th>Application Deadline</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for drive in drives %}
+            <tr>
+                <td>{{ drive.company.company_name }}</td>
+                <td>{{ drive.job_title }}</td>
+                <td>{{ drive.application_deadline }}</td>
+
+                <td class="
+                    {% if drive.status == 'approved' %}
+                        status-approved
+                    {% elif drive.status == 'pending' %}
+                        status-pending
+                    {% else %}
+                        status-rejected
+                    {% endif %}
+                ">
+                    {{ drive.status }}
+                </td>
+
+                <td class="action-buttons">
+                    <a
+                        href="{{ url_for('admin_update_drive_status', drive_id=drive.id, action='approve') }}"
+                        class="btn-success">Approve</a>
+
+                    <a
+                        href="{{ url_for('admin_update_drive_status', drive_id=drive.id, action='reject') }}"
+                        class="btn-warning">Reject</a>
+
+                    {% if drive.company.approval_status and
+                    drive.company.approval_status != "pending" %}
+                    <a
+                        href="{{ url_for('admin_view_applications', drive_id=drive.id) }}"
+                        class="btn-secondary">View Applications</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="dashboard-link">
+        Back to Dashboard
+    </a>
+</div>
+
+{% endblock %}
